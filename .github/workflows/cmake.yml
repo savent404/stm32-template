@@ -33,7 +33,7 @@ jobs:
         # url that must point to a zip file
         url: https://github.com/STMicroelectronics/STM32CubeF4/archive/refs/tags/v1.26.2.zip
         # destination folder
-        destination: ${{github.workspace}}/STM32CubeF4
+        destination: STM32CubeF4
         
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
