@@ -1,0 +1,3 @@
+[submodule "stm32-cmake"]
+	path = stm32-cmake
+	url = https://github.com/savent404/stm32-cmake
