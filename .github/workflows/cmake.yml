@@ -39,7 +39,12 @@ jobs:
           
     - name: check Cube Package
       run: ls ${{github.workspace}} -l && ls SDK -l
-      
+
+    - name: arm-none-eabi-gcc
+      # You may pin to the exact commit or the version.
+      # uses: fiam/arm-none-eabi-gcc@77f4527db18a17bf6def2cfeeea231f7bfa50902
+      uses: fiam/arm-none-eabi-gcc@v1.0.2
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
