@@ -30,7 +30,8 @@ jobs:
       with:
         url: https://github.com/STMicroelectronics/STM32CubeF4/archive/refs/tags/v1.26.2.zip
         destination: STM32CubeF4
-        
+    - name: check Cube Package
+      run: ls STM32CubeF4
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
