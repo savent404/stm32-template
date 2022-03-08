@@ -25,14 +25,20 @@ jobs:
       # uses: snickerbockers/submodules-init@74927a8bb0fe1bb0f1f1e4d102384a8e69f19171
       uses: snickerbockers/submodules-init@v4
       
-    - name: schmiddim-wget-unzip
-      uses: schmiddim/action-wget-unzip@v2
+    - name: Github Action for wget
+      # You may pin to the exact commit or the version.
+      # uses: wei/wget@ca0a6b7f0fdd7ffbe9d4cec0b9696f2dc658d3c9
+      uses: wei/wget@v1.1.1
       with:
-        url: https://github.com/STMicroelectronics/STM32CubeF4/archive/refs/tags/v1.26.2.zip
-        destination: STM32CubeF4
+        args: -O STM32CubeF4.zip https://github.com/STMicroelectronics/STM32CubeF4/archive/refs/tags/v1.26.2.zip
         
+    - name: Decompress
+      uses: TonyBogdanov/zip@1.0
+      with:
+          args: unzip -qq STM32CubeF4.zip -d STM32CubeF4
+          
     - name: check Cube Package
-      run: ls ${{github.workspace}}/STM32CubeF4
+      run: ls ${{github.workspace}} -l && ls STM32CubeF4 -l
       
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
