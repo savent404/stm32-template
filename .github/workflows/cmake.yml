@@ -9,20 +9,18 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  CUBE_VAR_NAME: STM32_CUBE_F4_PATH
+  CUBE_URL: https://github.com/STMicroelectronics/STM32CubeF4/archive/refs/tags/v1.26.2.zip
+  CUBE_DIR_NAME: STM32CubeF4-1.26.2
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
     
     - name: submodules-init
-      # You may pin to the exact commit or the version.
-      # uses: snickerbockers/submodules-init@74927a8bb0fe1bb0f1f1e4d102384a8e69f19171
       uses: snickerbockers/submodules-init@v4
       
     - name: Github Action for wget
@@ -30,15 +28,12 @@ jobs:
       # uses: wei/wget@ca0a6b7f0fdd7ffbe9d4cec0b9696f2dc658d3c9
       uses: wei/wget@v1.1.1
       with:
-        args: -O STM32CubeF4.zip https://github.com/STMicroelectronics/STM32CubeF4/archive/refs/tags/v1.26.2.zip
+        args: -O STM32Cube.zip ${{env.CUBE_URL}}
         
     - name: Decompress
       uses: TonyBogdanov/zip@1.0
       with:
-          args: unzip -qq STM32CubeF4.zip -d SDK
-          
-    - name: check Cube Package
-      run: ls ${{github.workspace}} -l && ls SDK -l
+          args: unzip -qq STM32Cube.zip -d SDK
 
     - name: arm-none-eabi-gcc GNU Arm Embedded Toolchain
       uses: carlosperate/arm-none-eabi-gcc-action@v1.3.0
@@ -48,12 +43,14 @@ jobs:
         path-env-var: TOOLCHAIN_PATH
 
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: STM32_CUBE_F4_PATH=SDK/STM32CubeF4-1.26.2 PATH=${PATH}:${TOOLCHAIN_PATH}/bin cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: ${{env.CUBE_VAR_NAME}}=SDK/${{env.CUBE_DIR_NAME}} PATH=${PATH}:${TOOLCHAIN_PATH}/bin cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
-      # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        name: elf
+        path: build/*.bin
       
