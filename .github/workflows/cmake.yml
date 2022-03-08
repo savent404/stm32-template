@@ -40,17 +40,17 @@ jobs:
     - name: check Cube Package
       run: ls ${{github.workspace}} -l && ls SDK -l
 
-    - name: arm-none-eabi-gcc
-      # You may pin to the exact commit or the version.
-      # uses: fiam/arm-none-eabi-gcc@77f4527db18a17bf6def2cfeeea231f7bfa50902
-      uses: fiam/arm-none-eabi-gcc@v1.0.2
+    - name: arm-none-eabi-gcc GNU Arm Embedded Toolchain
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.3.0
       with:
-        release: 9-2019-q4
+        # GNU Embedded Toolchain for Arm release name (e.g. "10.3-2021.07").
+        release: 10.3-2021.07
+        path-env-var: toolchain
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: STM32_CUBE_F4_PATH=SDK/STM32CubeF4-1.26.2 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: STM32_CUBE_F4_PATH=SDK/STM32CubeF4-1.26.2 PATH=${PATH}:${{toolchain}}/bin cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
       # Build your program with the given configuration
